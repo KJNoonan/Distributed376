@@ -25,7 +25,7 @@ public class FileScan {
 	        }
 	    }
 		}else{
-			System.out.println("Not a directory");
+			System.out.println("Not a directory(Does this exist?): " + folder);
 			System.exit(1);
 		}
 	}

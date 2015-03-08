@@ -1,10 +1,11 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -108,9 +109,10 @@ public class Server implements Runnable {
 			if (verbose) {
 				System.out.println(user + ":" + pass);
 			}
-			PrintWriter pw = new PrintWriter(userFile);
-			pw.write(user + ":" + pass);
-			pw.close();
+			FileWriter fileWritter = new FileWriter(userFile,true);
+	        BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
+	        bufferWritter.write(user + ":" + pass);
+	        bufferWritter.close();
 			users.put(user, pass);
 			new File(folder + separator + user).mkdir();
 			return 1;
