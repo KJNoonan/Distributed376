@@ -1,12 +1,8 @@
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Date;
@@ -14,8 +10,6 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Map.Entry;
-import java.io.DataOutputStream;
-import java.io.DataInputStream;
 
 public class Client implements Runnable {
 	private Hashtable<String, Long> requestList;
@@ -31,11 +25,12 @@ public class Client implements Runnable {
 	BufferedReader br;
 	String separator;
 	private boolean verbose;
+	private String os;
 
 	// make a client object that'll drive the server
 	public Client(InetAddress ip, int port, boolean v) throws IOException {
 		verbose = v;
-		String os = System.getProperty("os.name");
+		os = System.getProperty("os.name");
 		if (os.equals("Linux")) {
 			separator = "/";
 		} else {
@@ -48,9 +43,9 @@ public class Client implements Runnable {
 		f.scan();
 		clientFiles = f.returnMap();
 		// create a Socket with server and open streams
-		Socket client = new Socket(ip, port);
-		in = new DataInputStream(client.getInputStream());
-		out = new DataOutputStream(client.getOutputStream());
+		cSocket = new Socket(ip, port);
+		in = new DataInputStream(cSocket.getInputStream());
+		out = new DataOutputStream(cSocket.getOutputStream());
 		br = new BufferedReader(new InputStreamReader(System.in));
 	}
 
@@ -141,7 +136,8 @@ public class Client implements Runnable {
 		}
 	}
 
-	private LinkedList<String> recieveRequests() throws IOException, ClassNotFoundException {
+	private LinkedList<String> recieveRequests() throws IOException,
+			ClassNotFoundException {
 		if (verbose) {
 			System.out.println("Recieving List");
 		}
@@ -193,12 +189,13 @@ public class Client implements Runnable {
 			requestedFiles = recieveRequests();
 			LinkedList<Thread> threads = new LinkedList<Thread>();
 			while (!requestedFiles.isEmpty()) {
-				Uploader u = new Uploader(folder + separator + requestedFiles.pop(), out);
+				Uploader u = new Uploader(folder + separator
+						+ requestedFiles.pop(), out);
 				Thread t1 = new Thread(u);
 				t1.start();
 				threads.add(t1);
-				if(verbose){
-					System.out.println("Adding new Thread: "+t1.getId());
+				if (verbose) {
+					System.out.println("Adding new Thread: " + t1.getId());
 				}
 			}
 			// wait on files to finish uploading
@@ -242,8 +239,13 @@ public class Client implements Runnable {
 		for (Entry<String, Long> e : hm.entrySet()) {
 			// may need to multiply the long by 1000
 			Date d = new Date(e.getValue());
-			String[] i = e.getKey().split(separator);
-			System.out.println(count + ". " + i[i.length-1] + "\t" + d);
+			String[] i;
+			if (os.equals("Linux")) {
+				i = e.getKey().split(separator);
+			} else {
+				i = e.getKey().split(separator + separator);
+			}
+			System.out.println(count + ". " + i[i.length - 1] + "\t" + d);
 			count++;
 		}
 	}

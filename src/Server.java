@@ -4,9 +4,6 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -132,11 +129,12 @@ public class Server implements Runnable {
 		File f = new File(path);
 		BufferedReader br = new BufferedReader(new FileReader(f));
 		String line;
-		HashMap<String, String> accounts = new HashMap();
+		HashMap<String, String> accounts = new HashMap<String, String>();
 		while ((line = br.readLine()) != null) {
 			String[] account = line.split(":");
 			accounts.put(account[0], account[1]);
 		}
+		br.close();
 		users = accounts;
 	}
 

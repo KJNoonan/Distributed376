@@ -23,6 +23,7 @@ public class Uploader implements Runnable{
 			while((b = fs.read()) != -1){
 				out.writeByte(b);
 			}
+			fs.close();
 		}
 		@Override
 		public void run() {
