@@ -1,0 +1,11 @@
+Client: /127.0.0.1 connected on:2015-03-11 12-43-29
+/127.0.0.1: Client attempting to create a new user
+/127.0.0.1: Client sucessfully created a new Account
+/127.0.0.1: Logged in. User: Karen password: pass
+Server to /127.0.0.1: recieved Hashmap: []
+Server to /127.0.0.1: sent HashMap[]
+Server to /127.0.0.1: sent requestList []
+Server to /127.0.0.1: All Files Downloaded
+Server to /127.0.0.1: sent HashMap[]
+/127.0.0.1: requested file: exit
+/127.0.0.1: disconnected

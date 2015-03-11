@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.Console;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -26,19 +27,22 @@ public class Client implements Runnable {
 	String separator;
 	private boolean verbose;
 	private String os;
+	private Console console;
 
 	// make a client object that'll drive the server
 	public Client(InetAddress ip, int port, boolean v) throws IOException {
+		console = System.console();
 		verbose = v;
 		os = System.getProperty("os.name");
+		String working = System.getProperty("user.dir");
 		if (os.equals("Linux")) {
 			separator = "/";
+			working = working.substring(0, working.length()-4);
 		} else {
 			separator = "\\";
+			working = working.substring(0, working.length()-5);
 		}
-		folder = separator + "clientFiles";
-		folder = System.getProperty("user.dir") + folder;
-
+		folder = working + separator + "ExternalFiles" + separator + "clientFiles";
 		FileScan f = new FileScan(folder);
 		f.scan();
 		clientFiles = f.returnMap();
@@ -76,8 +80,8 @@ public class Client implements Runnable {
 			return 0;
 		}
 
-		System.out.println("Please enter your password: ");
-		String pass = br.readLine();
+		char[] password = console.readPassword("Please enter your password: ");
+		String pass = new String(password); 
 		out.writeUTF(pass);
 		String conf = in.readUTF();
 		if (conf.equals("confirmed")) {
@@ -106,11 +110,11 @@ public class Client implements Runnable {
 			System.out.println("Username taken");
 			return 0;
 		} else {
-			String pass, cpass;
-			System.out.println("Please enter a password: ");
-			pass = br.readLine();
-			System.out.println("Please confirm your password: ");
-			cpass = br.readLine();
+			char [] p, cp;
+			p = console.readPassword("Please enter a password");
+			String pass = new String(p);
+			cp = console.readPassword("Please confirm your password");
+			String cpass = new String(cp);
 			while (!pass.equals(cpass)) {
 				System.out.println("Passwords must match!");
 				System.out.println("Please enter a password: ");
@@ -206,6 +210,7 @@ public class Client implements Runnable {
 			String cmd;
 			String answer;
 			do {
+				clearScreen();
 				serverFiles = retriveHashMap();
 				printHashMap(serverFiles);
 				System.out
@@ -217,7 +222,7 @@ public class Client implements Runnable {
 				}
 				answer = in.readUTF();
 				if (answer.equals("Sending...")) {
-					Downloader d = new Downloader(folder + cmd, in);
+					Downloader d = new Downloader(folder + separator + cmd, in);
 					Thread t1 = new Thread(d);
 					t1.start();
 					t1.join();
@@ -232,12 +237,18 @@ public class Client implements Runnable {
 		}
 
 	}
+	private void clearScreen() throws IOException{
+		if(os.equals("Windows")){
+			Runtime.getRuntime().exec("cls");
+		}else{
+			System.out.flush();
+		}
+	}
 
 	private void printHashMap(HashMap<String, Long> hm) {
 		int count = 1;
 		System.out.print("Files" + "\t" + "Date\n");
 		for (Entry<String, Long> e : hm.entrySet()) {
-			// may need to multiply the long by 1000
 			Date d = new Date(e.getValue());
 			String[] i;
 			if (os.equals("Linux")) {

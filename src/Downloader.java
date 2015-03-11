@@ -24,8 +24,7 @@ public class Downloader implements Runnable {
 			outFile.write(picArray);
 			outFile.close();
 		}else{
-			System.out.println("File not Found, Sorry...");
-			System.exit(0);
+			System.out.println("File not Found: " + requested);
 		}
 	}
 

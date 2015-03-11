@@ -30,7 +30,7 @@ public class Uploader implements Runnable{
 			try {
 				upload();
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.out.println("File not found: " + sendingFile);
 			}
 			
 		}
