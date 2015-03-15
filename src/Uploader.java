@@ -13,6 +13,11 @@ public class Uploader implements Runnable{
 			out = o;
 			sendingFile = f;
 		}
+		
+		/*********************************************************
+		 * Gets the bits from the given file and sends them 
+		 * through the stream
+		 * */
 		public void upload() throws FileNotFoundException, IOException{
 			File file = new File(sendingFile);
 			long bts = file.length();

@@ -8,10 +8,16 @@ public class Downloader implements Runnable {
 	private DataInputStream in;
 	private String requested;
 	
+	/*****************************
+	 * constructor 
+	 * */
 	public Downloader(String r, DataInputStream i){
 		in = i;
 		requested = r;
 	}
+	/****************************
+	 * recieves bytes from server and recreates the file from them 
+	 * */
 	public void download(int bytes) throws FileNotFoundException, IOException{
 		if(bytes != 0){
 			byte[] picArray = new byte[bytes];

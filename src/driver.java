@@ -54,7 +54,7 @@ public class driver {
 				Server s = new Server(client, verbose);
 				Thread t = new Thread(s);
 				t.start();
-				if(threads.size() >= CONNECTIONS){
+				if(threads.size() >= CONNECTIONS){//only allows a certain amount of clients
 					try {
 						threads.pop().join();
 					} catch (InterruptedException e) {

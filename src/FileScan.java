@@ -12,6 +12,9 @@ public class FileScan {
 		folder = new File(path);
 	}
 	
+	/************************************************
+	 * Scans the files and puts them into a hashmap
+	 * */
 	public void scan(){
 		fileList = new HashMap<String, Long>();
 		if(folder.isDirectory()){
@@ -25,7 +28,9 @@ public class FileScan {
 	        }
 	    }
 		}else{
-			System.out.println("Not a directory(Does this exist?): " + folder);
+			System.out.println("Not a directory! Making File:" + folder);
+			System.out.println("Please Rerun");
+			folder.mkdir();
 			System.exit(1);
 		}
 	}
@@ -36,6 +41,9 @@ public class FileScan {
 			System.out.println(e.getKey()+"   "+e.getValue());
 		}
 	}
+	/***************************************************
+	 * scan and return the hashmap
+	 * */
 	public HashMap<String, Long> returnMap(){
 		scan();
 		return fileList;
